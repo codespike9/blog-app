@@ -13,8 +13,8 @@ export class S3Service {
         this.s3 = new S3({
             region: "ap-south-1",
             credentials: {
-                accessKeyId: configService.get<string>('accessKeyId'),
-                secretAccessKey: configService.get<string>('secretAccessKey')
+                accessKeyId: process.env.accessKeyId,
+                secretAccessKey: process.env.secretAccessKey
             }
         })
     }
