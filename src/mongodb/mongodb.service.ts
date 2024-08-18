@@ -34,6 +34,7 @@ export class MongodbService {
     }
 
     async runWithTransaction(fn: (session: ClientSession) => Promise<any>): Promise<any> {
+        
         const session = this.client.startSession();
         session.startTransaction(); 
         console.log("Transaction Started");
@@ -52,16 +53,32 @@ export class MongodbService {
         }
     }
 
-    async insertOne(collectionName: string, document: Document, session?: ClientSession) {
+    async insertOne(
+        collectionName: string,
+        document: Document,
+        session?: ClientSession
+    ) {
+
         return this.db.collection(collectionName).insertOne(document, { session });
     }
 
-    async find(collectionName: string, filter: Filter<Document> = {}, session?: ClientSession) {
-        return this.db.collection(collectionName).find(filter, { session }).toArray();
+    async find(
+        collectionName: string,
+        filter: Filter<Document> = {},
+        projection?: Partial<Document>,
+        session?: ClientSession
+    ) {
+            
+        return this.db.collection(collectionName).find(filter, {projection, session }).toArray();
     }
 
-    async findOne(collectionName: string, filter: Filter<Document> = {}, session?: ClientSession) {
-        return this.db.collection(collectionName).findOne(filter, { session });
+    async findOne(
+        collectionName: string,
+        filter: Filter<Document> = {},
+        projection?: Partial<Document>,
+        session?: ClientSession
+    ) {
+        return this.db.collection(collectionName).findOne(filter, {projection, session });
     }
 
     async updateOne(
@@ -70,7 +87,7 @@ export class MongodbService {
         update: Document,
         session?: ClientSession
     ) {
-        return this.db.collection(collectionName).updateOne(filter, { $set: update }, { session });
+        return this.db.collection(collectionName).updateOne(filter, update, { session });
     }
 
     async deleteOne(

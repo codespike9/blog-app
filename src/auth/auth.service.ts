@@ -10,7 +10,7 @@ import * as jwt from 'jsonwebtoken';
 export class AuthService {
 
     db:Db
-    readonly secretKey ;
+    readonly secretKey:string ;
     private readonly expiresIn = '1h';
     constructor(private readonly mongodbService:MongodbService,private config:ConfigService) {
         this.db=mongodbService.getDb();
@@ -43,8 +43,9 @@ export class AuthService {
 
     async login(dto:AuthDto) {
 
+        console.log(dto.email)
         const user = await this.mongodbService.findOne('users',{email:dto.email});
-
+        console.log(user)
         if(!user) throw new ForbiddenException('Invalid credentials.');
 
         const passMatches= await argon.verify(user.password,dto.password);
